@@ -1,6 +1,11 @@
-{% extends 'base.html' %}
+{%extends 'base.html'%}
 
-{% block title %} Cadastrar-se - Calculadora Avançada {% endblock %}
-{% block content %}
+{%block title%}Cadastrar-se - Calculadora Avançada{%endblock%}
+{%block content%}
 <h1>Cadastrar-se</h1>
-{% endblock %}
+<form id="form-cadastro" action="{%url 'salvar_cadastro'%}" method="post">
+    {%csrf_token%}
+{{FormularioCadastro}}
+<button type=""submit">Cadastrar</button>
+</form>
+{%endblock%}

@@ -1,4 +1,6 @@
-/* Estilos gerais */
+* {
+    box-sizing: border-box;
+}
 body {
     font-size: 16px;
     font-family: Arial, sans-serif;
@@ -9,14 +11,11 @@ body {
     padding: 0;
 }
 
-/*Cabeçalho e rodapé*/
-header,
-footer {
+header {
     text-align: center;
     padding: 15px;
 }
 
-/* Links de navegação interna */
 header > a:first-child {
     display: inline-block;
     font-size: 20px;
@@ -26,7 +25,6 @@ header > a:first-child {
     margin-bottom: 10px;
 }
 
-/* Títulos */
 h1 {
     font-size: 2rem;
     font-weight: bold;
@@ -34,23 +32,10 @@ h1 {
     text-align: center;
 }
 
-h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-top: 20px;
-}
-
-h3,
-h4 {
-    margin-top: 15px;
-}
-
-/* Parágrafos */
 p {
     padding: 10px;
 }
 
-/* Listas */
 ul {
     list-style-type: none;
     padding: 0;
@@ -61,7 +46,6 @@ ul li {
     margin-bottom: 10px;
 }
 
-/* Conteúdo principal */
 main {
     margin: 0 auto;
     max-width: 800px;
@@ -72,7 +56,6 @@ nav {
     padding: 15px;
 }
 
-/*Lista de navegação*/
 nav ul {
     display: flex;
     flex-direction: row;
@@ -80,7 +63,6 @@ nav ul {
     gap: 15px;
 }
 
-/*Links da navegação*/
 nav a {
     color: #000;
     font-weight: bold;
@@ -90,7 +72,6 @@ nav a:hover {
     color: #007bff;
 }
 
-/* Links */
 a {
     cursor: pointer;
     text-decoration: none;
@@ -105,7 +86,6 @@ a:focus {
     outline-offset: 2px;
 }
 
-/* Botões */
 button {
     cursor: pointer;
     padding: 10px 20px;
@@ -119,8 +99,21 @@ input {
     border-radius: 5px;
 }
 
+#formulario-cadastro button[type="submit"],
+#formulario-login button[type="submit"] {
+    display: block;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
 
-/* Media Queries para telas menores */
+
 @media (max-width: 600px) {
     body {
         font-size: 15px;
@@ -128,15 +121,6 @@ input {
 
     h1 {
         font-size: 1.5rem;
-    }
-
-    h2 {
-        font-size: 1.25rem;
-    }
-
-    h3,
-    h4 {
-        font-size: 1rem;
     }
 
     nav ul {

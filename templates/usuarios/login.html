@@ -1,6 +1,11 @@
-{% extends 'base.html' %}
+{%extends 'base.html'%}
 
-{% block title %} Login - Calculadora Avançada {% endblock %}
-{% block content %}
+{%block title%}Login - Calculadora Avançada{%endblock%}
+{%block content%}
 <h1>Login</h1>
-{% endblock %}
+<form id="form-login" action="{%url 'autenticar'%}" method="post">
+    {%csrf_token%}
+{{FormularioLogin}}
+<button type=""submit">Entrar</button>
+</form>
+{%endblock%}
