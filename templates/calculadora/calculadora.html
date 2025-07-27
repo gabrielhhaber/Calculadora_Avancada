@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{%static 'css/style.css'%}"/>
     <link rel="stylesheet" href="{%static 'css/calculadora/calculadora.css'%}" />
 </head>
-<body data-idUsuario="{{id_usuario}}">
+<body data-id_usuario="{{id_usuario}}">
     {%include 'partials/header.html'%}
     <main>
         <h1>Calculadora Avançada</h1>
@@ -20,7 +20,8 @@
                 <div class="botoes">
                     <!-- Adaptado com aria-label para mostrar um texto, pois o C não fica claro para leitores de tela.-->
                     <button type="button" class="botao botao-vermelho" aria-label="Limpar calculadora" data-valor="C">C</button>
-                    <button type="button" class="botao" data-valor="±">±</button>
+                    <!-- Adaptado com aria-label para esclarecer a usuários cegos o que significa o sinal-->
+                    <button type="button" class="botao botao-inverter" aria-label="Inverter sinal" data-valor="±">±</button>
                     <button type="button" class="botao" data-valor="%">%</button>
                     <button type="button" class="botao botao-operador" data-valor="÷">÷</button>
     
@@ -49,6 +50,10 @@
         
             <div class="historico">
                 <h2>Histórico</h2>
+                <!-- Como os leitores de tela não podem entender perfeitamente ícones, o aria-label também foi adicionado-->
+                <button class="botao-lixeira" aria-label="Apagar histórico">
+                    🗑️
+                </button>
                 <ul id="lista-historico">
                 </ul>
             </div>

@@ -2,7 +2,8 @@ const URLServidor = "http://localhost:8000";
 const visor = document.getElementById("visor");
 const botoes = document.querySelectorAll(".botao[data-valor]");
 const botaoIgual = document.querySelector(".botao-igual");
-const idUsuario = document.body.dataset.idUsuario;
+const botaoLixeira = document.querySelector(".botao-lixeira");
+const idUsuario = document.body.dataset.id_usuario;
 
 let expressao = "";
 
@@ -13,6 +14,17 @@ botoes.forEach(botao => {
         if (valor === "C") {
             expressao = "";
             visor.textContent = "0";
+        } else if (valor === "±") {
+            const partes = expressao.match(/(-?\d+\.?\d*)$/);
+            if (partes) {
+                const numeroAtual = partes[0];
+                const inicio = expressao.slice(0, expressao.length - numeroAtual.length);
+                const numeroInvertido = numeroAtual.startsWith("-")
+                    ? numeroAtual.slice(1)
+                    : "-" + numeroAtual;
+                expressao = inicio + numeroInvertido;
+                visor.textContent = expressao;
+            }
         } else {
             expressao += valor;
             visor.textContent = expressao;
@@ -28,11 +40,15 @@ botaoIgual.addEventListener("click", (evento) => {
 
     try {
         const resultado = eval(expressaoCalculada);
+    expressao     = resultado;
+        visor.textContent = resultado;
         registrarOperacao(expressaoCalculada, resultado);
     } catch (erro) {
         visor.textContent = "Erro";
     }
 });
+
+botaoLixeira.addEventListener("click", apagarHistorico);
 
 atualizarHistorico();
 
@@ -47,10 +63,14 @@ async function atualizarHistorico() {
     });
     const data = await response.json();
     listaHistorico.innerHTML = "";
-    for (operacao of listaHistorico.operacoes) {
+    for (operacao of data.operacoes) {
         listaHistorico.innerHTML += `
         <li class="operacao">
-        ${operacao.parametros}=${operacao.resultado}
+        ${operacao.parametros
+            .replace(/\//g, "÷")
+            .replace(/\*/g, "×")
+            .replace(/-/g, "−")}
+            =${operacao.resultado}    ${formatarDataBrasil(operacao.dt_inclusao)}
         </li>
         `;
     }
@@ -65,6 +85,21 @@ async function registrarOperacao(parametros, resultado) {
             "Accept": "application/json"
         },
         body: JSON.stringify({id_usuario: idUsuario, parametros: parametros, resultado: resultado})
+    });
+    await atualizarHistorico();
+}
+
+function formatarDataBrasil(dataISO) {
+    const [ano, mes, dia] = dataISO.split("-");
+    return `${dia}/${mes}/${ano}`;
+}
+
+async function apagarHistorico() {
+    await fetch(`${URLServidor}/calculadora/deletar_operacoes_usuario/${idUsuario}/`, {
+        method: "delete",
+        headers: {
+            "Accept": "application/json"
+        }
     });
     await atualizarHistorico();
 }

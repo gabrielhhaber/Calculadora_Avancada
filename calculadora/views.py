@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseBadRequest
 from .models import Operacao
 from usuarios.models import Usuario
-from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
 import json
 
@@ -19,8 +18,9 @@ def listar_operacoes_usuario(request, id_usuario):
     """View que recebe o id de um usuário e retorna uma lista contendo suas operações em JSON"""
     try:
         usuario = Usuario.objects.get(id_usuario=id_usuario)
-        operacoes = Operacao.objects.filter(id_usuario=usuario)
-        operacoes_list = [model_to_dict(operacao) for operacao in operacoes]
+        operacoes = usuario.operacoes.all().order_by('-id_operacao')
+        operacoes_list = list(operacoes.values(
+            'id_operacao', 'id_usuario', 'parametros', 'resultado', 'dt_inclusao'))
         return JsonResponse({'operacoes': operacoes_list})
     except Exception as e:
         return HttpResponseBadRequest('não foi possível listar as operações para este usuário.')
@@ -32,6 +32,26 @@ def registrar_operacao(request):
         data = json.loads(request.body)
         usuario = Usuario.objects.get(id_usuario=data['id_usuario'])
         operacao = Operacao.objects.create(id_usuario=usuario, parametros=data['parametros'], resultado=data['resultado'])
-        return JsonResponse({'operacao': model_to_dict(operacao)})
+        return JsonResponse({
+            'operacao': {
+                'id_operacao': operacao.id_operacao,
+                'id_usuario': operacao.id_usuario.id_usuario,
+                'parametros': operacao.parametros,
+                'resultado': operacao.resultado,
+                'dt_inclusao': operacao.dt_inclusao,
+            }
+        })
     except Exception as e:
-        return HttpResponseBadRequest('Não foi possível registrar a operação para este usuário.')
+        return HttpResponseBadRequest("Não foi possível registrar a operação para este usuário.")
+
+@csrf_exempt
+def deletar_operacoes_usuario(request, id_usuario):
+    """View que recebe o id de um usuário e deleta todas as suas operações"""
+    try:
+        if request.method == 'DELETE':
+            usuario = Usuario.objects.get(id_usuario=id_usuario)
+            usuario.operacoes.all().delete()
+            return JsonResponse({'mensagem': 'Operações deletadas com sucesso'})
+    except Exception as e:
+        return HttpResponseBadRequest("Não foi possível deletar as operações para este usuário")
+    return HttpResponseBadRequest("Não foi possível deletar as operações para este usuário")
