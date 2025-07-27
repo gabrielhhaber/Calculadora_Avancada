@@ -30,7 +30,7 @@ def registrar_operacao(request):
     """View que recebe uma operação em JSON e cria uma operação no banco de dados para um determinado usuário."""
     try:
         data = json.loads(request.body)
-        usuario = Usuarios.objects.get(id_usuario=data['id_usuario'])
+        usuario = Usuario.objects.get(id_usuario=data['id_usuario'])
         operacao = Operacao.objects.create(id_usuario=usuario, parametros=data['parametros'], resultado=data['resultado'])
         return JsonResponse({'operacao': model_to_dict(operacao)})
     except Exception as e:

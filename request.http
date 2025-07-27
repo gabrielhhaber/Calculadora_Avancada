@@ -1,8 +1,0 @@
-POST http://localhost:8000/calculadora/registrar_operacao/
-Content-Type: application/json
-
-{
-  "id_usuario": 1,
-  "parametros": "2+3",
-  "resultado": "5"
-}
